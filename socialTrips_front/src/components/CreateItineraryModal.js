@@ -85,8 +85,10 @@ const CreateItineraryModal = ({ visible, onClose }) => {
             value={duration}
             onChangeText={setDuration}
           />
-          <Button title="Create Itinerary" onPress={handleCreateItinerary} />
-          <TouchableOpacity onPress={onClose}>
+          <TouchableOpacity style={styles.createButton} onPress={handleCreateItinerary}>
+            <Text style={styles.createButtonText}>Create Itinerary</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.cancelButtonContainer} onPress={onClose}>
             <Text style={styles.cancelButton}>Cancel</Text>
           </TouchableOpacity>
         </View>
@@ -103,27 +105,74 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: '#fff',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 20,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    padding: 26,
     height: '70%',
+    elevation: 8,
+    shadowColor: '#007AFF',
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.13,
+    shadowRadius: 12,
   },
   title: {
-    fontSize: 24,
-    marginBottom: 20,
+    fontSize: 25,
+    fontWeight: 'bold',
+    marginBottom: 22,
+    color: '#007AFF',
+    textAlign: 'center',
+    letterSpacing: 0.5,
   },
   input: {
     width: '100%',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
+    borderWidth: 1.5,
+    borderColor: '#007AFF',
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 14,
+    backgroundColor: '#fafdff',
+    fontSize: 16,
+    color: '#222',
+    elevation: 2,
+    shadowColor: '#007AFF',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.10,
+    shadowRadius: 4,
+  },
+  createButton: {
+    backgroundColor: '#007AFF',
+    borderRadius: 12,
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginTop: 8,
+    shadowColor: '#007AFF',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.18,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  createButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 18,
+    letterSpacing: 0.5,
+  },
+  cancelButtonContainer: {
+    marginTop: 16,
+    alignItems: 'center',
   },
   cancelButton: {
-    marginTop: 10,
-    color: 'red',
+    color: '#e74c3c',
     textDecorationLine: 'underline',
+    fontWeight: 'bold',
+    fontSize: 16,
+    textAlign: 'center',
+    paddingVertical: 6,
+    paddingHorizontal: 18,
+    borderRadius: 8,
+    backgroundColor: '#f8d7da',
+    overflow: 'hidden',
+    marginTop: 2,
   },
 });
 

@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Switch, Image, Alert } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Switch, Image, Alert, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import { UserContext } from '../components/UserContext';
 import { getApiUrl } from '../utils/api';
@@ -74,6 +74,7 @@ const MainScreen = ({ navigation }) => {
         }}
         value={usernameInput}
         autoCapitalize="none"
+        placeholderTextColor="#888"
       />
       {usernameError && <Text style={styles.errorMessage}>Please enter your username</Text>}
       <TextInput
@@ -85,6 +86,7 @@ const MainScreen = ({ navigation }) => {
         }}
         value={password}
         secureTextEntry={!showPassword}
+        placeholderTextColor="#888"
       />
       {passwordError && <Text style={styles.errorMessage}>Please enter your password</Text>}
       <View style={styles.checkboxContainer}>
@@ -98,15 +100,13 @@ const MainScreen = ({ navigation }) => {
         />
       </View>
       <View style={styles.buttonContainer}>
-        <Button
-          title="Log in"
-          onPress={handleLogin}
-          color="#007bff"
-        />
+        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+          <Text style={styles.loginButtonText}>Log in</Text>
+        </TouchableOpacity>
       </View>
-      <Text style={styles.registerText} onPress={() => navigation.navigate('RegisterScreen')}>
-        Don't have an account? Sign up here
-      </Text>
+      <TouchableOpacity onPress={() => navigation.navigate('RegisterScreen')} style={styles.registerButton}>
+        <Text style={styles.registerText}>Don't have an account? Sign up here</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -144,12 +144,20 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
-    height: 40,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    paddingHorizontal: 10,
+    height: 44,
+    borderWidth: 1.5,
+    borderColor: '#007AFF',
+    borderRadius: 12,
+    paddingHorizontal: 12,
     marginBottom: 10,
+    backgroundColor: '#fafdff',
+    fontSize: 16,
+    color: '#222',
+    elevation: 2,
+    shadowColor: '#007AFF',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.10,
+    shadowRadius: 4,
   },
   errorInput: {
     borderColor: 'red',
@@ -170,10 +178,38 @@ const styles = StyleSheet.create({
     width: '100%',
     marginBottom: 10,
   },
-  registerText: {
+  loginButton: {
+    backgroundColor: '#007AFF',
+    borderRadius: 12,
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginTop: 8,
+    shadowColor: '#007AFF',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.18,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  loginButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 18,
+    letterSpacing: 0.5,
+  },
+  registerButton: {
     marginTop: 20,
+    alignItems: 'center',
+  },
+  registerText: {
     textDecorationLine: 'underline',
-    color: 'blue',
+    color: '#007AFF',
+    fontWeight: 'bold',
+    fontSize: 16,
+    paddingVertical: 6,
+    paddingHorizontal: 18,
+    borderRadius: 8,
+    backgroundColor: '#f0f4ff',
+    overflow: 'hidden',
   },
 });
 

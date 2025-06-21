@@ -2,6 +2,7 @@ package com.samuel.modelo;
 
 import jakarta.persistence.*;
 import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "comentarios")
@@ -36,6 +37,7 @@ public class Comentarios implements java.io.Serializable {
         this.id = id;
     }
 
+    @JsonBackReference("user-comments")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario", nullable = false)
     public Usuarios getUsuarios() {

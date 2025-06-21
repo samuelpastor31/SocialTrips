@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState, useCallback } from 'react';
-import { Alert, StyleSheet, View, FlatList } from 'react-native';
+import { Alert, StyleSheet, View, FlatList, Text } from 'react-native';
 import { Button, Card, Paragraph, Title } from 'react-native-paper';
 import axios from 'axios';
 import NavigationBar from '../components/NavigationBar';
@@ -8,6 +8,8 @@ import { getApiUrl } from '../utils/api';
 import ChangeImage from '../components/ChangeImage';
 import ProfileItineraryItem from '../components/ProfileItineraryItem';
 import EditProfile from '../components/EditProfile';
+import FollowButton from '../components/FollowButton';
+import UserListModal from '../components/UserListModal';
 
 const ProfileScreen = ({ navigation }) => {
   const { username } = useContext(UserContext);
@@ -15,6 +17,12 @@ const ProfileScreen = ({ navigation }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [itineraries, setItineraries] = useState([]);
   const [profilePic, setProfilePic] = useState('');
+  const [followers, setFollowers] = useState(0);
+  const [following, setFollowing] = useState(0);
+  const [showUserList, setShowUserList] = useState(false);
+  const [userList, setUserList] = useState([]);
+  const [userListTitle, setUserListTitle] = useState('');
+  const [showUnfollow, setShowUnfollow] = useState(false);
 
   const fetchUserData = useCallback(async () => {
     try {
@@ -25,6 +33,11 @@ const ProfileScreen = ({ navigation }) => {
 
       const itinerariesResponse = await axios.get(getApiUrl(`itinerarios/by-usuario/${userData.id}`));
       setItineraries(itinerariesResponse.data);
+
+      const followersRes = await axios.get(getApiUrl(`follows/followers/${userData.id}`));
+      setFollowers(followersRes.data.length);
+      const followingRes = await axios.get(getApiUrl(`follows/following/${userData.id}`));
+      setFollowing(followingRes.data.length);
     } catch (error) {
       if (error.response && error.response.status === 404) {
         Alert.alert('Error', 'User not found.');
@@ -135,6 +148,45 @@ const ProfileScreen = ({ navigation }) => {
     }
   }, [profilePic]);
 
+  const handleShowFollowers = async () => {
+    if (!user) return;
+    try {
+      const res = await axios.get(getApiUrl(`follows/followers/${user.id}`));
+      setUserList(res.data.map(f => f.follower));
+      setUserListTitle('Followers');
+      setShowUnfollow(false);
+      setShowUserList(true);
+    } catch (e) {
+      Alert.alert('Error', 'Could not load followers.');
+    }
+  };
+
+  const handleShowFollowing = async () => {
+    if (!user) return;
+    try {
+      const res = await axios.get(getApiUrl(`follows/following/${user.id}`));
+      setUserList(res.data.map(f => f.following));
+      setUserListTitle('Following');
+      setShowUnfollow(true);
+      setShowUserList(true);
+    } catch (e) {
+      Alert.alert('Error', 'Could not load following.');
+    }
+  };
+
+  const handleUnfollow = async (targetUser) => {
+    try {
+      await axios.delete(getApiUrl('follows/unfollow'), {
+        params: { followerId: user.id, followingId: targetUser.id },
+      });
+      setUserList(userList.filter(u => u.id !== targetUser.id));
+      setFollowing(f => f - 1);
+      Alert.alert('Unfollowed', `You have unfollowed ${targetUser.nombreUsuario || targetUser.username}`);
+    } catch (e) {
+      Alert.alert('Error', 'Could not unfollow user.');
+    }
+  };
+
   return (
     <View style={styles.wrapper}>
       <FlatList
@@ -149,6 +201,14 @@ const ProfileScreen = ({ navigation }) => {
                     <Title style={styles.title}>{user ? user.nombreUsuario : ''}</Title>
                     <Paragraph style={styles.email}>{user ? user.correoElectronico : ''}</Paragraph>
                     <Paragraph style={styles.date}>Registered since: {user ? new Date(user.fechaRegistro).toLocaleDateString() : ''}</Paragraph>
+                    <View style={styles.followInfo}>
+                      <Text style={styles.followCount} onPress={handleShowFollowers}>
+                        Followers: {followers}
+                      </Text>
+                      <Text style={styles.followCount} onPress={handleShowFollowing}>
+                        Following: {following}
+                      </Text>
+                    </View>
                   </Card.Content>
                 </Card>
                 {isEditing ? (
@@ -190,6 +250,14 @@ const ProfileScreen = ({ navigation }) => {
           </Button>
         }
       />
+      <UserListModal
+        visible={showUserList}
+        users={userList}
+        title={userListTitle}
+        onClose={() => setShowUserList(false)}
+        onUnfollow={handleUnfollow}
+        showUnfollow={showUnfollow}
+      />
       <NavigationBar />
     </View>
   );
@@ -198,7 +266,7 @@ const ProfileScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#f4f8fb',
     position: 'relative',
   },
   headerContainer: {
@@ -207,46 +275,82 @@ const styles = StyleSheet.create({
   },
   card: {
     marginBottom: 16,
+    borderRadius: 18,
+    elevation: 6,
+    shadowColor: '#007AFF',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    backgroundColor: '#fff',
   },
   cardContent: {
     alignItems: 'center',
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
     marginBottom: 8,
+    color: '#222',
+    letterSpacing: 0.5,
   },
   email: {
     fontSize: 16,
     marginBottom: 8,
+    color: '#555',
   },
   date: {
     fontSize: 14,
-    color: '#666',
+    color: '#888',
+    marginBottom: 4,
   },
   button: {
     backgroundColor: '#007AFF',
-    borderRadius: 4,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     marginBottom: 16,
+    elevation: 2,
   },
   deleteButton: {
-    backgroundColor: 'red',
-    borderRadius: 4,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    marginBottom: 60, 
+    backgroundColor: '#e74c3c',
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginBottom: 60,
     alignSelf: 'center',
+    elevation: 2,
   },
   itinerariesTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginVertical: 8,
+    marginVertical: 12,
+    color: '#007AFF',
+    letterSpacing: 0.5,
   },
   itinerariesContainer: {
     paddingHorizontal: 16,
     paddingBottom: 16,
+  },
+  followInfo: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    marginTop: 12,
+    marginBottom: 8,
+    gap: 16,
+  },
+  followCount: {
+    fontSize: 17,
+    color: '#007AFF',
+    fontWeight: 'bold',
+    backgroundColor: '#eaf2fb',
+    paddingVertical: 6,
+    paddingHorizontal: 18,
+    borderRadius: 20,
+    marginHorizontal: 6,
+    overflow: 'hidden',
+    elevation: 1,
   },
 });
 

@@ -84,11 +84,14 @@ const HomeScreen = ({ navigation }) => {
           placeholder="Search by destination or user..."
           value={searchQuery}
           onChangeText={handleSearch}
+          placeholderTextColor="#888"
         />
         <IconButton
           icon="magnify"
           size={20}
           onPress={() => handleSearch(searchQuery)}
+          color="#007AFF"
+          style={styles.searchIcon}
         />
       </View>
       <FlatList
@@ -100,6 +103,7 @@ const HomeScreen = ({ navigation }) => {
       <FAB
         style={styles.fab}
         icon="plus"
+        color="#fff"
         onPress={handleOpenModal}
       />
       <CreateItineraryModal
@@ -129,14 +133,30 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: 10,
     marginBottom: 10,
+    backgroundColor: '#fafdff',
+    borderRadius: 14,
+    borderWidth: 1.5,
+    borderColor: '#007AFF',
+    shadowColor: '#007AFF',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.10,
+    shadowRadius: 4,
+    elevation: 2,
+    paddingHorizontal: 8,
   },
   searchInput: {
     flex: 1,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
+    borderWidth: 0,
+    borderRadius: 14,
     paddingHorizontal: 10,
-    height: 40,
+    height: 44,
+    backgroundColor: 'transparent',
+    fontSize: 16,
+    color: '#222',
+  },
+  searchIcon: {
+    marginLeft: 2,
+    backgroundColor: 'transparent',
   },
   list: {
     paddingBottom: 70,
@@ -146,6 +166,13 @@ const styles = StyleSheet.create({
     margin: 16,
     right: 0,
     bottom: 70,
+    backgroundColor: '#007AFF',
+    borderRadius: 28,
+    shadowColor: '#007AFF',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.18,
+    shadowRadius: 8,
+    elevation: 6,
   },
 });
 

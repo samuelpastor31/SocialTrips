@@ -5,8 +5,10 @@ import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -18,6 +20,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "usuarios")
 public class Usuarios implements java.io.Serializable {
@@ -90,8 +93,8 @@ public class Usuarios implements java.io.Serializable {
         this.fechaRegistro = fechaRegistro;
     }
 
-    @JsonManagedReference
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "usuarios")
+    @JsonManagedReference("user-comments")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "usuarios", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<Comentarios> getComentarios() {
         return this.comentarios;
     }
@@ -101,7 +104,7 @@ public class Usuarios implements java.io.Serializable {
     }
 
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "usuarios")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "usuarios", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<MeGusta> getMeGustas() {
         return this.meGustas;
     }
@@ -111,7 +114,7 @@ public class Usuarios implements java.io.Serializable {
     }
 
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "usuarios")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "usuarios", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<Itinerarios> getItinerarios() {
         return this.itinerarios;
     }

@@ -22,10 +22,20 @@ const BackButton = () => {
 const styles = StyleSheet.create({
   container: {
     padding: 10,
+    backgroundColor: '#fff',
+    borderRadius: 24,
+    alignSelf: 'flex-start',
+    margin: 10,
+    elevation: 3,
+    shadowColor: '#007AFF',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 6,
   },
   icon: {
-    width: 24,
-    height: 24,
+    width: 28,
+    height: 28,
+    tintColor: '#007AFF',
   },
 });
 

@@ -20,11 +20,17 @@ const CountryComboBox = ({ selectedCountry, setSelectedCountry }) => {
 
 const styles = StyleSheet.create({
   container: {
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginBottom: 20,
+    borderWidth: 1.5,
+    borderColor: '#007AFF',
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    marginBottom: 22,
+    backgroundColor: '#fafdff',
+    elevation: 2,
+    shadowColor: '#007AFF',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.10,
+    shadowRadius: 4,
   },
 });
 

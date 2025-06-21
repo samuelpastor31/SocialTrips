@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView, Switch, Alert } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, ScrollView, Switch, Alert, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import BackButton from '../components/BackButton';
 import { getApiUrl } from '../utils/api';
@@ -94,6 +94,8 @@ const RegisterScreen = ({ navigation }) => {
         placeholder="Username"
         value={username}
         onChangeText={setUsername}
+        autoCapitalize="none"
+        placeholderTextColor="#888"
       />
       <TextInput
         style={[styles.input, emailError && styles.inputError]}
@@ -102,6 +104,7 @@ const RegisterScreen = ({ navigation }) => {
         onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
+        placeholderTextColor="#888"
       />
       <TextInput
         style={[styles.input, passwordError && styles.inputError]}
@@ -109,6 +112,7 @@ const RegisterScreen = ({ navigation }) => {
         value={password}
         onChangeText={setPassword}
         secureTextEntry={!showPassword}
+        placeholderTextColor="#888"
       />
       <TextInput
         style={[styles.input, confirmPasswordError && styles.inputError]}
@@ -116,6 +120,7 @@ const RegisterScreen = ({ navigation }) => {
         value={confirmPassword}
         onChangeText={setConfirmPassword}
         secureTextEntry={!showPassword}
+        placeholderTextColor="#888"
       />
       <View style={styles.switchContainer}>
         <Text>Show Password</Text>
@@ -126,7 +131,9 @@ const RegisterScreen = ({ navigation }) => {
         <Switch value={termsAccepted} onValueChange={setTermsAccepted} />
       </View>
       {termsError && <Text style={styles.errorText}>You must accept the terms and conditions</Text>}
-      <Button title="Register" onPress={handleRegister} />
+      <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
+        <Text style={styles.registerButtonText}>Register</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
@@ -145,11 +152,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 4,
-    padding: 10,
+    borderWidth: 1.5,
+    borderColor: '#007AFF',
+    borderRadius: 12,
+    padding: 12,
     marginBottom: 10,
+    backgroundColor: '#fafdff',
+    fontSize: 16,
+    color: '#222',
+    elevation: 2,
+    shadowColor: '#007AFF',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.10,
+    shadowRadius: 4,
   },
   inputError: {
     borderColor: 'red',
@@ -160,10 +175,30 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     justifyContent: 'space-between',
   },
+  registerButton: {
+    backgroundColor: '#007AFF',
+    borderRadius: 12,
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginTop: 8,
+    shadowColor: '#007AFF',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.18,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  registerButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 18,
+    letterSpacing: 0.5,
+  },
   errorText: {
-    color: 'red',
+    color: '#e74c3c',
     marginBottom: 10,
     textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 15,
   },
 });
 

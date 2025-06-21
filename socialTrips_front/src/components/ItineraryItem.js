@@ -124,46 +124,47 @@ const ItineraryItem = ({ itinerary, onLikeToggle }) => {
         </TouchableOpacity>
         <Text style={styles.timeAgo}>2 hours ago</Text>
       </View>
-      <Text style={styles.title}>{itinerary.titulo}</Text>
-      <Text style={styles.description}>{itinerary.descripcion}</Text>
-      <Text style={styles.destination}>
-        {itinerary.destino} {country ? country.flag : ''}
-      </Text>
-      <Text style={styles.duration}>Duration: {itinerary.duracion} days</Text>
-      <View style={styles.footer}>
-        <View style={styles.actionContainer}>
-          <LikeButton itinerary={itinerary} onLikeToggle={handleLikeToggle} />
-          <Text style={styles.actionText}>{likeCount}</Text>
-        </View>
-        <TouchableOpacity style={styles.actionContainer} onPress={() => setCommentModalVisible(true)}>
-          <Ionicons name="chatbubble-outline" size={24} color="#666" />
-          <Text style={styles.actionText}>Comment</Text>
-        </TouchableOpacity>
-      </View>
-      <TouchableOpacity style={styles.showCommentsButton} onPress={() => {
-        setCommentsVisible(!commentsVisible);
-        if (!commentsVisible) fetchComments();
-      }}>
-        <Text style={styles.showCommentsText}>
-          {commentsVisible ? 'Hide comments' : `Show comments (${commentsCount})`}
+      <View style={styles.card}>
+        <Text style={styles.title}>{itinerary.titulo}</Text>
+        <Text style={styles.description}>{itinerary.descripcion}</Text>
+        <Text style={styles.destination}>
+          {itinerary.destino} {country ? country.flag : ''}
         </Text>
-      </TouchableOpacity>
-      {commentsVisible && (
-        <FlatList
-          data={comments}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.commentItem}>
-              <TouchableOpacity onPress={() => navigation.navigate('UserProfileScreen', { userId: item.idUsuario })}>
-                <Text style={styles.commentUserName}>{item.nombreUsuario}</Text>
-              </TouchableOpacity>
-              <Text style={styles.commentContent}>{item.contenido}</Text>
-              <Text style={styles.commentDate}>{new Date(item.fechaComentario).toLocaleString()}</Text>
-            </View>
-          )}
-        />
-      )}
-
+        <Text style={styles.duration}>Duration: {itinerary.duracion} days</Text>
+        <View style={styles.footer}>
+          <View style={styles.actionContainer}>
+            <LikeButton itinerary={itinerary} onLikeToggle={handleLikeToggle} />
+            <Text style={styles.actionText}>{likeCount}</Text>
+          </View>
+          <TouchableOpacity style={styles.actionContainer} onPress={() => setCommentModalVisible(true)}>
+            <Ionicons name="chatbubble-outline" size={24} color="#007AFF" />
+            <Text style={styles.actionText}>Comment</Text>
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity style={styles.showCommentsButton} onPress={() => {
+          setCommentsVisible(!commentsVisible);
+          if (!commentsVisible) fetchComments();
+        }}>
+          <Text style={styles.showCommentsText}>
+            {commentsVisible ? 'Hide comments' : `Show comments (${commentsCount})`}
+          </Text>
+        </TouchableOpacity>
+        {commentsVisible && (
+          <FlatList
+            data={comments}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.commentItem}>
+                <TouchableOpacity onPress={() => navigation.navigate('UserProfileScreen', { userId: item.idUsuario })}>
+                  <Text style={styles.commentUserName}>{item.nombreUsuario}</Text>
+                </TouchableOpacity>
+                <Text style={styles.commentContent}>{item.contenido}</Text>
+                <Text style={styles.commentDate}>{new Date(item.fechaComentario).toLocaleString()}</Text>
+              </View>
+            )}
+          />
+        )}
+      </View>
       <Modal
         animationType="slide"
         transparent={true}
@@ -178,11 +179,14 @@ const ItineraryItem = ({ itinerary, onLikeToggle }) => {
               placeholder="Write your comment here"
               value={comment}
               onChangeText={setComment}
+              multiline={true}
             />
-            <View style={styles.modalButtons}>
-              <Button title="Send" onPress={handleAddComment} />
-              <Button title="Cancel" onPress={() => setCommentModalVisible(false)} />
-            </View>
+            <TouchableOpacity style={styles.addCommentButton} onPress={handleAddComment}>
+              <Text style={styles.addCommentButtonText}>Add Comment</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.cancelCommentButton} onPress={() => setCommentModalVisible(false)}>
+              <Text style={styles.cancelCommentButtonText}>Cancel</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -192,19 +196,23 @@ const ItineraryItem = ({ itinerary, onLikeToggle }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 15,
-    marginVertical: 10,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 5,
-    elevation: 3,
+    padding: 18,
+    marginVertical: 12,
+    backgroundColor: '#fafdff',
+    borderRadius: 16,
+    shadowColor: '#007AFF',
+    shadowOpacity: 0.13,
+    shadowOffset: { width: 0, height: 3 },
+    shadowRadius: 8,
+    elevation: 4,
+    borderWidth: 1,
+    borderColor: '#eaf2fb',
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 6,
   },
   userContainer: {
     flexDirection: 'row',
@@ -213,34 +221,41 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#007bff',
+    color: '#007AFF',
     marginLeft: 10,
   },
   userImage: {
     width: 40,
     height: 40,
     borderRadius: 20,
+    borderWidth: 2,
+    borderColor: '#eaf2fb',
+    backgroundColor: '#fff',
   },
   timeAgo: {
     fontSize: 12,
-    color: '#555',
+    color: '#888',
   },
   title: {
-    fontSize: 18,
+    fontSize: 19,
     fontWeight: 'bold',
     marginVertical: 5,
+    color: '#222',
+    letterSpacing: 0.2,
   },
   description: {
-    fontSize: 14,
-    color: '#333',
+    fontSize: 15,
+    color: '#444',
+    marginBottom: 4,
   },
   destination: {
     fontSize: 14,
-    color: '#555',
+    color: '#007AFF',
+    marginBottom: 2,
   },
   duration: {
     fontSize: 14,
-    color: '#555',
+    color: '#888',
   },
   footer: {
     flexDirection: 'row',
@@ -256,65 +271,135 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
   },
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 18,
+    padding: 18,
+    marginVertical: 8,
+    marginHorizontal: 2,
+    shadowColor: '#007AFF',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.13,
+    shadowRadius: 12,
+    elevation: 7,
+  },
   showCommentsButton: {
-    marginTop: 10,
+    marginTop: 8,
+    alignSelf: 'flex-end',
+    backgroundColor: '#f0f4ff',
+    borderRadius: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 14,
+    shadowColor: '#007AFF',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.10,
+    shadowRadius: 4,
+    elevation: 2,
   },
   showCommentsText: {
-    fontSize: 14,
-    color: '#007bff',
+    color: '#007AFF',
+    fontWeight: 'bold',
+    fontSize: 15,
   },
   commentItem: {
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#fafdff',
+    borderRadius: 10,
     padding: 10,
-    borderRadius: 5,
-    marginVertical: 5,
+    marginVertical: 4,
+    marginHorizontal: 2,
+    shadowColor: '#007AFF',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 2,
+    elevation: 1,
   },
   commentUserName: {
-    fontSize: 14,
+    color: '#007AFF',
     fontWeight: 'bold',
-    color: '#007bff',
+    fontSize: 14,
   },
   commentContent: {
-    fontSize: 14,
-    color: '#333',
+    color: '#222',
+    fontSize: 15,
+    marginVertical: 2,
   },
   commentDate: {
+    color: '#888',
     fontSize: 12,
-    color: '#999',
-    marginTop: 5,
+    marginTop: 2,
   },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0,0,0,0.4)',
   },
   modalContent: {
-    width: 300,
-    padding: 20,
     backgroundColor: '#fff',
-    borderRadius: 10,
+    borderRadius: 18,
+    padding: 24,
+    width: '85%',
+    shadowColor: '#007AFF',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.13,
+    shadowRadius: 12,
+    elevation: 8,
     alignItems: 'center',
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 10,
+    color: '#007AFF',
+    marginBottom: 12,
   },
   commentInput: {
     width: '100%',
-    height: 100,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginBottom: 10,
-    textAlignVertical: 'top',
+    borderWidth: 1.5,
+    borderColor: '#007AFF',
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 12,
+    backgroundColor: '#fafdff',
+    fontSize: 15,
+    color: '#222',
+    elevation: 2,
+    shadowColor: '#007AFF',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.10,
+    shadowRadius: 4,
   },
-  modalButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
+  addCommentButton: {
+    backgroundColor: '#007AFF',
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 24,
+    alignItems: 'center',
+    marginBottom: 8,
+    shadowColor: '#007AFF',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.18,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  addCommentButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  cancelCommentButton: {
+    alignItems: 'center',
+    marginTop: 2,
+  },
+  cancelCommentButtonText: {
+    color: '#e74c3c',
+    textDecorationLine: 'underline',
+    fontWeight: 'bold',
+    fontSize: 15,
+    paddingVertical: 4,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    backgroundColor: '#f8d7da',
+    overflow: 'hidden',
   },
 });
 

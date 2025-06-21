@@ -96,19 +96,28 @@ const EditProfile = ({ user, setEditing, fetchUserData }) => {
 
 const styles = StyleSheet.create({
   textInput: {
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 4,
-    paddingHorizontal: 8,
-    marginBottom: 16,
+    height: 44,
+    borderColor: '#007AFF',
+    borderWidth: 1.5,
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    marginBottom: 18,
+    backgroundColor: '#fafdff',
+    elevation: 2,
+    shadowColor: '#007AFF',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.10,
+    shadowRadius: 4,
+    fontSize: 16,
+    color: '#222',
   },
   button: {
     backgroundColor: '#007AFF',
-    borderRadius: 4,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    marginBottom: 16,
+    borderRadius: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    marginBottom: 18,
+    elevation: 2,
   },
 });
 

@@ -28,36 +28,43 @@ const ProfileItineraryItem = ({ itinerary, onDelete }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 15,
-    marginVertical: 10,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 5,
-    elevation: 3,
+    padding: 18,
+    marginVertical: 12,
+    backgroundColor: '#fafdff',
+    borderRadius: 16,
+    shadowColor: '#007AFF',
+    shadowOpacity: 0.13,
+    shadowOffset: { width: 0, height: 3 },
+    shadowRadius: 8,
+    elevation: 4,
+    borderWidth: 1,
+    borderColor: '#eaf2fb',
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 6,
   },
   title: {
-    fontSize: 18,
+    fontSize: 19,
     fontWeight: 'bold',
+    color: '#222',
+    letterSpacing: 0.2,
   },
   description: {
-    fontSize: 14,
-    color: '#333',
+    fontSize: 15,
+    color: '#444',
+    marginBottom: 4,
   },
   destination: {
     fontSize: 14,
-    color: '#555',
+    color: '#007AFF',
+    marginBottom: 2,
   },
   duration: {
     fontSize: 14,
-    color: '#555',
+    color: '#888',
   },
 });
 
