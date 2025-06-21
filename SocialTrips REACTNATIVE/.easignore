@@ -1,0 +1,7 @@
+.ServiceHub
+.expo
+.expo-shared
+node_modules
+android/app/build
+.config/opera/oauc_pipe
+
