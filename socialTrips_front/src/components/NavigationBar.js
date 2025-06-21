@@ -59,7 +59,7 @@ const NavigationBar = () => {
             activeOpacity={0.7}
           >
             <Image
-              source={require('../../../SocialTrips/src/utils/cerrar_sesion.png')}
+              source={require('../utils/cerrar_sesion.png')}
               style={styles.icon}
               resizeMode="contain"
             />
@@ -70,7 +70,7 @@ const NavigationBar = () => {
             activeOpacity={0.7}
           >
             <Image
-              source={require('../../../SocialTrips/src/utils/home.png')}
+              source={require('../utils/home.png')}
               style={styles.iconHome}
               resizeMode="contain"
             />
@@ -81,7 +81,7 @@ const NavigationBar = () => {
             activeOpacity={0.7}
           >
             <Image
-              source={require('../../../SocialTrips/src/utils/perfil.png')}
+              source={require('../utils/perfil.png')}
               style={styles.iconProfile}
               resizeMode="contain"
             />

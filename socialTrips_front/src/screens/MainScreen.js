@@ -60,7 +60,7 @@ const MainScreen = ({ navigation }) => {
       <Text style={styles.title}>Bienvenido a SocialTrips</Text>
       <Text style={styles.eslogan}>Descubre, viaja, comparte</Text>
       <Image
-        source={require("../../../SocialTrips/src/utils/logoSocialTrips.jpeg")}
+        source={require("../utils/logoSocialTrips.jpeg")}
         style={styles.logo}
         resizeMode="contain"
       />

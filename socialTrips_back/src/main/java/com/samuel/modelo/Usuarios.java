@@ -19,7 +19,7 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
 @Entity
-@Table(name = "usuarios", catalog = "socialtrips")
+@Table(name = "usuarios")
 public class Usuarios implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;

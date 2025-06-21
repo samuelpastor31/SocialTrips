@@ -1,4 +1,4 @@
-let apiUrl = 'http://13.39.163.169:8082'; // IP actual del servidor
+let apiUrl = 'http://10.0.2.2:8082'; // IP especial para emulador Android
 
 export function getApiUrl(path) {
   return `${apiUrl}/${path}`;

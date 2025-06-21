@@ -13,7 +13,7 @@ import com.samuel.modeloDTO.ItinerariosDTO;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "itinerarios", catalog = "socialtrips")
+@Table(name = "itinerarios")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Itinerarios implements java.io.Serializable {
 

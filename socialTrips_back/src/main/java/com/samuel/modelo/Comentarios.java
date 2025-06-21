@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "comentarios", catalog = "socialtrips")
+@Table(name = "comentarios")
 public class Comentarios implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
