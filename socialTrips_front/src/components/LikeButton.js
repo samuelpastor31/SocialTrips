@@ -8,8 +8,8 @@ import { UserContext } from '../components/UserContext';
 const LikeButton = ({ itinerary, onLikeToggle }) => {
   const { username } = useContext(UserContext);
   const [userId, setUserId] = useState(null);
-  const [meGustaId, setMeGustaId] = useState(null);
-  const [likeActivado, setLikeActivado] = useState(false);
+  const [likeId, setLikeId] = useState(null);
+  const [likeActive, setLikeActive] = useState(false);
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -17,17 +17,17 @@ const LikeButton = ({ itinerary, onLikeToggle }) => {
         const response = await axios.get(getApiUrl(`usuarios/by-username/${username}`));
         const userData = response.data;
         setUserId(userData.id);
-        fetchMeGustaId(userData.id, itinerary.id);
+        fetchLikeId(userData.id, itinerary.id);
       } catch (error) {
         console.error('Error fetching user ID:', error);
-        Alert.alert('Error', 'Hubo un problema al cargar los datos del usuario.');
+        Alert.alert('Error', 'There was a problem loading user data.');
       }
     };
 
     fetchUserId();
   }, [username, itinerary.id]);
 
-  const fetchMeGustaId = async (userId, itineraryId) => {
+  const fetchLikeId = async (userId, itineraryId) => {
     try {
         const response = await axios.get(getApiUrl('megustas/find'), {
           params: {
@@ -36,47 +36,47 @@ const LikeButton = ({ itinerary, onLikeToggle }) => {
           }
         });
         if (response.data && response.data.id) {
-          setMeGustaId(response.data.id);
-          setLikeActivado(true);
+          setLikeId(response.data.id);
+          setLikeActive(true);
         }
       } catch (error) {
       }
   };
 
   const addRemoveLike = async () => {
-    if (!likeActivado) {
+    if (!likeActive) {
       try {
         const response = await axios.post(getApiUrl('megustas'), {
           idUsuario: userId,
           idItinerario: itinerary.id,
         });
         if (response.status === 200) {
-          setLikeActivado(true);
-          setMeGustaId(response.data.id);
+          setLikeActive(true);
+          setLikeId(response.data.id);
           onLikeToggle(itinerary.contadorMeGusta + 1);
         }
       } catch (error) {
         console.error('Error creating like:', error);
-        Alert.alert('Error', 'Hubo un problema al dar me gusta.');
+        Alert.alert('Error', 'There was a problem liking.');
       }
     } else {
       try {
-        const response = await axios.delete(getApiUrl(`megustas/${meGustaId}`));
+        const response = await axios.delete(getApiUrl(`megustas/${likeId}`));
         if (response.status === 204) {
-          setLikeActivado(false);
-          setMeGustaId(null);
+          setLikeActive(false);
+          setLikeId(null);
           onLikeToggle(itinerary.contadorMeGusta - 1);
         }
       } catch (error) {
         console.error('Error removing like:', error);
-        Alert.alert('Error', 'Hubo un problema al quitar me gusta.');
+        Alert.alert('Error', 'There was a problem removing the like.');
       }
     }
   };
 
   return (
     <TouchableOpacity onPress={addRemoveLike}>
-      {likeActivado ? (
+      {likeActive ? (
         <Ionicons name="heart" color={"#e51c1c"} size={32} />
       ) : (
         <Ionicons name="heart-outline" color={"#404040"} size={32} />

@@ -27,15 +27,15 @@ const NavigationBar = () => {
 
   const handleLogout = () => {
     Alert.alert(
-      'Cerrar Sesión',
-      '¿Estás seguro de que quieres cerrar sesión?',
+      'Log out',
+      'Are you sure you want to log out?',
       [
         {
-          text: 'Cancelar',
+          text: 'Cancel',
           style: 'cancel',
         },
         {
-          text: 'Aceptar',
+          text: 'OK',
           onPress: () => {
             navigation.navigate('MainScreen');
           },

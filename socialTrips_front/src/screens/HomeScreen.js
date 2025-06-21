@@ -36,7 +36,7 @@ const HomeScreen = ({ navigation }) => {
       setFilteredItineraries(enrichedItineraries);
     } catch (error) {
       console.error('Error fetching itineraries:', error);
-      Alert.alert('Error', 'Hubo un problema al cargar los itinerarios.');
+      Alert.alert('Error', 'There was a problem loading the itineraries.');
     }
   }, []);
 
@@ -77,11 +77,11 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Bienvenido, {username}!</Text>
+      <Text style={styles.header}>Welcome, {username}!</Text>
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
-          placeholder="Buscar por destino o usuario..."
+          placeholder="Search by destination or user..."
           value={searchQuery}
           onChangeText={handleSearch}
         />

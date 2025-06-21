@@ -12,25 +12,25 @@ import EditProfile from '../components/EditProfile';
 const ProfileScreen = ({ navigation }) => {
   const { username } = useContext(UserContext);
   const [user, setUser] = useState(null);
-  const [editing, setEditing] = useState(false);
-  const [itinerarios, setItinerarios] = useState([]);
-  const [pfp, setPfp] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [itineraries, setItineraries] = useState([]);
+  const [profilePic, setProfilePic] = useState('');
 
   const fetchUserData = useCallback(async () => {
     try {
       const response = await axios.get(getApiUrl(`usuarios/by-username/${username}`));
       const userData = response.data;
       setUser(userData);
-      setPfp(userData.fotoPerfil || ''); // Inicializar pfp con la foto de perfil actual
+      setProfilePic(userData.fotoPerfil || ''); // Initialize profilePic with current profile picture
 
-      const itinerariosResponse = await axios.get(getApiUrl(`itinerarios/by-usuario/${userData.id}`));
-      setItinerarios(itinerariosResponse.data);
+      const itinerariesResponse = await axios.get(getApiUrl(`itinerarios/by-usuario/${userData.id}`));
+      setItineraries(itinerariesResponse.data);
     } catch (error) {
       if (error.response && error.response.status === 404) {
-        Alert.alert('Error', 'Usuario no encontrado.');
+        Alert.alert('Error', 'User not found.');
       } else {
         console.error('Error fetching user data:', error);
-        Alert.alert('Error', 'Hubo un problema al cargar los datos del usuario.');
+        Alert.alert('Error', 'There was a problem loading user data.');
       }
     }
   }, [username]);
@@ -39,25 +39,25 @@ const ProfileScreen = ({ navigation }) => {
     fetchUserData();
   }, [fetchUserData]);
 
-  const handleEliminarCuenta = () => {
+  const handleDeleteAccount = () => {
     Alert.alert(
-      'Confirmación',
-      '¿Estás seguro de que deseas eliminar tu cuenta?',
+      'Confirmation',
+      'Are you sure you want to delete your account?',
       [
         {
-          text: 'Cancelar',
+          text: 'Cancel',
           style: 'cancel',
         },
         {
-          text: 'Eliminar',
+          text: 'Delete',
           onPress: async () => {
             try {
               await axios.delete(getApiUrl(`usuarios/${user.id}`));
-              Alert.alert('Cuenta eliminada', 'Tu cuenta ha sido eliminada correctamente.');
+              Alert.alert('Account deleted', 'Your account has been deleted successfully.');
               navigation.navigate('MainScreen')
             } catch (error) {
               console.error(error);
-              Alert.alert('Error', 'Hubo un problema al intentar eliminar tu cuenta. Por favor, inténtalo de nuevo más tarde.');
+              Alert.alert('Error', 'There was a problem trying to delete your account. Please try again later.');
             }
           },
           style: 'destructive',
@@ -69,23 +69,23 @@ const ProfileScreen = ({ navigation }) => {
 
   const handleDeleteItinerary = (itineraryId) => {
     Alert.alert(
-      'Confirmación',
-      '¿Estás seguro de que deseas eliminar este itinerario?',
+      'Confirmation',
+      'Are you sure you want to delete this itinerary?',
       [
         {
-          text: 'Cancelar',
+          text: 'Cancel',
           style: 'cancel',
         },
         {
-          text: 'Eliminar',
+          text: 'Delete',
           onPress: async () => {
             try {
               await axios.delete(getApiUrl(`itinerarios/${itineraryId}`));
-              setItinerarios(itinerarios.filter(itinerary => itinerary.id !== itineraryId));
-              Alert.alert('Eliminado', 'El itinerario ha sido eliminado correctamente.');
+              setItineraries(itineraries.filter(itinerary => itinerary.id !== itineraryId));
+              Alert.alert('Deleted', 'The itinerary has been deleted successfully.');
             } catch (error) {
               console.error('Error deleting itinerary:', error);
-              Alert.alert('Error', 'Hubo un problema al eliminar el itinerario. Por favor, inténtalo de nuevo.');
+              Alert.alert('Error', 'There was a problem deleting the itinerary. Please try again.');
             }
           },
           style: 'destructive',
@@ -96,7 +96,7 @@ const ProfileScreen = ({ navigation }) => {
   };
 
   const handleLikeToggle = () => {
-    setItinerarios(itinerarios => [...itinerarios]);
+    setItineraries(itineraries => [...itineraries]);
   };
 
   const handleImageChange = async (newImage) => {
@@ -106,65 +106,65 @@ const ProfileScreen = ({ navigation }) => {
     }
     if (!newImage) {
       console.error('New image is not available.');
-      Alert.alert('Error', 'No se ha seleccionado ninguna imagen.');
+      Alert.alert('Error', 'No image has been selected.');
       return;
     }
     try {
       const response = await axios.put(getApiUrl(`usuarios/${user.id}/fotoPerfil`), { fotoPerfil: newImage });
       if (response.status === 200) {
         setUser(prevUser => ({ ...prevUser, fotoPerfil: newImage }));
-        Alert.alert('Éxito', 'La foto de perfil se ha actualizado correctamente.');
+        Alert.alert('Success', 'Profile picture updated successfully.');
       } else {
         console.error('Error updating profile picture:', response);
-        Alert.alert('Error', 'Hubo un problema al actualizar la foto de perfil. Por favor, inténtalo de nuevo.');
+        Alert.alert('Error', 'There was a problem updating the profile picture. Please try again.');
       }
     } catch (error) {
       console.error('Error updating profile picture:', error);
       if (error.response) {
         console.error('Response data:', error.response.data);
-        Alert.alert('Error', `Hubo un problema al actualizar la foto de perfil: ${error.response.data.message || error.response.data}`);
+        Alert.alert('Error', `There was a problem updating the profile picture: ${error.response.data.message || error.response.data}`);
       } else {
-        Alert.alert('Error', 'Hubo un problema al actualizar la foto de perfil. Por favor, inténtalo de nuevo.');
+        Alert.alert('Error', 'There was a problem updating the profile picture. Please try again.');
       }
     }
   };
 
   useEffect(() => {
-    if (pfp && pfp !== user?.fotoPerfil) {
-      handleImageChange(pfp);
+    if (profilePic && profilePic !== user?.fotoPerfil) {
+      handleImageChange(profilePic);
     }
-  }, [pfp]);
+  }, [profilePic]);
 
   return (
     <View style={styles.wrapper}>
       <FlatList
-        data={[{ key: 'header' }, ...itinerarios]}
+        data={[{ key: 'header' }, ...itineraries]}
         renderItem={({ item }) => {
           if (item.key === 'header') {
             return (
               <View style={styles.headerContainer}>
                 <Card style={styles.card}>
                   <Card.Content style={styles.cardContent}>
-                    <ChangeImage pfp={pfp} setPfp={setPfp} />
+                    <ChangeImage pfp={profilePic} setPfp={setProfilePic} />
                     <Title style={styles.title}>{user ? user.nombreUsuario : ''}</Title>
                     <Paragraph style={styles.email}>{user ? user.correoElectronico : ''}</Paragraph>
-                    <Paragraph style={styles.date}>Registrado desde: {user ? new Date(user.fechaRegistro).toLocaleDateString() : ''}</Paragraph>
+                    <Paragraph style={styles.date}>Registered since: {user ? new Date(user.fechaRegistro).toLocaleDateString() : ''}</Paragraph>
                   </Card.Content>
                 </Card>
-                {editing ? (
-                  <EditProfile user={user} setEditing={setEditing} fetchUserData={fetchUserData} />
+                {isEditing ? (
+                  <EditProfile user={user} setEditing={setIsEditing} fetchUserData={fetchUserData} />
                 ) : (
                   <Button
                     icon="pencil"
                     mode="contained"
-                    onPress={() => setEditing(true)}
+                    onPress={() => setIsEditing(true)}
                     style={styles.button}
                   >
-                    Editar perfil
+                    Edit profile
                   </Button>
                 )}
                 <Title style={styles.itinerariesTitle}>
-                  {itinerarios.length > 0 ? 'Mis Itinerarios' : 'No hay itinerarios en este perfil'}
+                  {itineraries.length > 0 ? 'My Itineraries' : 'No itineraries in this profile'}
                 </Title>
               </View>
             );
@@ -183,10 +183,10 @@ const ProfileScreen = ({ navigation }) => {
           <Button
             icon="delete"
             mode="contained"
-            onPress={handleEliminarCuenta}
+            onPress={handleDeleteAccount}
             style={styles.deleteButton}
           >
-            Eliminar cuenta
+            Delete account
           </Button>
         }
       />

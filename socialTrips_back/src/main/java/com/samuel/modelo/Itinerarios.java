@@ -38,16 +38,14 @@ public class Itinerarios implements java.io.Serializable {
     public Itinerarios() {
     }
 
-    public Itinerarios(int id, Usuarios usuarios, String titulo, Date fechaCreacion) {
-        this.id = id;
+    public Itinerarios(Usuarios usuarios, String titulo, Date fechaCreacion) {
         this.usuarios = usuarios;
         this.titulo = titulo;
         this.fechaCreacion = fechaCreacion;
     }
 
-    public Itinerarios(int id, Usuarios usuarios, String titulo, String descripcion, Date fechaCreacion, String destino,
+    public Itinerarios(Usuarios usuarios, String titulo, String descripcion, Date fechaCreacion, String destino,
                        Integer contadorMeGusta, String comentario, Integer duracion, List<MeGusta> meGustas, List<Comentarios> comentarios) {
-        this.id = id;
         this.usuarios = usuarios;
         this.titulo = titulo;
         this.descripcion = descripcion;
@@ -61,6 +59,7 @@ public class Itinerarios implements java.io.Serializable {
     }
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     public int getId() {
         return this.id;
@@ -146,7 +145,7 @@ public class Itinerarios implements java.io.Serializable {
 
     @JsonIgnore
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "itinerarios")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "itinerarios", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<MeGusta> getMeGustas() {
         return this.meGustas;
     }
@@ -157,7 +156,7 @@ public class Itinerarios implements java.io.Serializable {
 
     @JsonIgnore
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "itinerarios")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "itinerarios", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<Comentarios> getComentarioses() {
         return this.comentarios;
     }

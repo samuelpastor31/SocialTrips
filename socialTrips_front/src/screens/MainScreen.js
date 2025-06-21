@@ -5,28 +5,28 @@ import { UserContext } from '../components/UserContext';
 import { getApiUrl } from '../utils/api';
 
 const MainScreen = ({ navigation }) => {
-  const { setUsername } = useContext(UserContext); // Obtiene la función para el nombre de usuario
-  const [usuario, setUsuario] = useState('');
+  const { setUsername } = useContext(UserContext); // Gets the function for username
+  const [usernameInput, setUsernameInput] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [usuarioError, setUsuarioError] = useState(false);
+  const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
 
   const handleLogin = async () => {
-    if (usuario === '' && password === '') {
-      setUsuarioError(true);
+    if (usernameInput === '' && password === '') {
+      setUsernameError(true);
       setPasswordError(true);
       return;
     } else {
-      setUsuarioError(false);
+      setUsernameError(false);
       setPasswordError(false);
     }
 
-    if (usuario === '') {
-      setUsuarioError(true);
+    if (usernameInput === '') {
+      setUsernameError(true);
       return;
     } else {
-      setUsuarioError(false);
+      setUsernameError(false);
     }
 
     if (password === '') {
@@ -37,47 +37,48 @@ const MainScreen = ({ navigation }) => {
 
     try {
       const response = await axios.post(getApiUrl('usuarios/login'), {
-        nombreUsuario: usuario,
+        nombreUsuario: usernameInput,
         contrasena: password,
       });
 
       if (response.data === 'Usuario no encontrado') {
-        Alert.alert('Error', 'El usuario no existe');
+        Alert.alert('Error', 'User not found');
       } else if (response.data === 'Contraseña incorrecta') {
-        Alert.alert('Error', 'La contraseña es incorrecta');
+        Alert.alert('Error', 'Incorrect password');
       } else {
-        setUsername(usuario);
+        setUsername(usernameInput);
         navigation.navigate('HomeScreen');
       }
     } catch (error) {
-      console.error('Error al iniciar sesión:', error);
-      Alert.alert('Error', 'Registrate o revisa tu conexión.');
+      console.error('Login error:', error);
+      Alert.alert('Error', 'Sign up or check your connection.');
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Bienvenido a SocialTrips</Text>
-      <Text style={styles.eslogan}>Descubre, viaja, comparte</Text>
+      <Text style={styles.title}>Welcome to SocialTrips</Text>
+      <Text style={styles.eslogan}>Discover, travel, share</Text>
       <Image
         source={require("../utils/logoSocialTrips.jpeg")}
         style={styles.logo}
         resizeMode="contain"
       />
-      <Text style={styles.loginTitle}>Iniciar sesión</Text>
+      <Text style={styles.loginTitle}>Log in</Text>
       <TextInput
-        style={[styles.input, usuarioError && styles.errorInput]}
-        placeholder="Nombre Usuario"
+        style={[styles.input, usernameError && styles.errorInput]}
+        placeholder="Username"
         onChangeText={text => {
-          setUsuario(text);
-          setUsuarioError(false);
+          setUsernameInput(text);
+          setUsernameError(false);
         }}
-        value={usuario}
+        value={usernameInput}
+        autoCapitalize="none"
       />
-      {usuarioError && <Text style={styles.errorMessage}>Por favor, introduce tu nombre de usuario</Text>}
+      {usernameError && <Text style={styles.errorMessage}>Please enter your username</Text>}
       <TextInput
         style={[styles.input, passwordError && styles.errorInput]}
-        placeholder="Contraseña"
+        placeholder="Password"
         onChangeText={text => {
           setPassword(text);
           setPasswordError(false);
@@ -85,9 +86,9 @@ const MainScreen = ({ navigation }) => {
         value={password}
         secureTextEntry={!showPassword}
       />
-      {passwordError && <Text style={styles.errorMessage}>Por favor, introduce tu contraseña</Text>}
+      {passwordError && <Text style={styles.errorMessage}>Please enter your password</Text>}
       <View style={styles.checkboxContainer}>
-        <Text>Mostrar contraseña</Text>
+        <Text>Show password</Text>
         <Switch
           value={showPassword}
           onValueChange={setShowPassword}
@@ -98,13 +99,13 @@ const MainScreen = ({ navigation }) => {
       </View>
       <View style={styles.buttonContainer}>
         <Button
-          title="Iniciar sesión"
+          title="Log in"
           onPress={handleLogin}
           color="#007bff"
         />
       </View>
       <Text style={styles.registerText} onPress={() => navigation.navigate('RegisterScreen')}>
-        ¿No tienes una cuenta? Regístrate aquí
+        Don't have an account? Sign up here
       </Text>
     </View>
   );

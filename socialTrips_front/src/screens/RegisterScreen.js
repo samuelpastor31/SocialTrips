@@ -51,7 +51,7 @@ const RegisterScreen = ({ navigation }) => {
     if (password !== confirmPassword) {
       setPasswordError(true);
       setConfirmPasswordError(true);
-      Alert.alert('Error', 'Las contraseñas no coinciden');
+      Alert.alert('Error', 'Passwords do not match');
       return;
     }
 
@@ -62,173 +62,108 @@ const RegisterScreen = ({ navigation }) => {
       setTermsError(false);
     }
 
-    if (hasError) {
-      return;
-    }
-
-    const registerDate = new Date().toISOString();
+    if (hasError) return;
 
     try {
-      const url = getApiUrl('usuarios/register');
-      console.log('URL:', url);
-
-      const response = await axios.post(url, {
+      const response = await axios.post(getApiUrl('usuarios/register'), {
         nombreUsuario: username,
         correoElectronico: email,
         contrasena: password,
-        fotoPerfil: null,
-        fechaRegistro: registerDate
       });
-
-      if (response.data === 'El nombre de usuario ya existe') {
-        Alert.alert('Error', 'El nombre de usuario ya existe');
-      } else {
-        Alert.alert('Registro exitoso', 'Te has registrado correctamente');
+      if (response.status === 201) {
+        Alert.alert('Success', 'Account created successfully!');
         navigation.navigate('MainScreen');
+      } else {
+        Alert.alert('Error', 'There was a problem creating your account.');
       }
     } catch (error) {
-      console.error('Error al registrar:', error);
-      Alert.alert('Error al registrar', 'Ha ocurrido un error al intentar registrarse. Por favor, inténtelo de nuevo más tarde.');
+      if (error.response && error.response.data && error.response.data.message) {
+        Alert.alert('Error', error.response.data.message);
+      } else {
+        Alert.alert('Error', 'There was a problem creating your account.');
+      }
     }
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <View style={styles.header}>
-        <BackButton />
+    <ScrollView contentContainerStyle={styles.container}>
+      <BackButton onPress={() => navigation.goBack()} />
+      <Text style={styles.title}>Register</Text>
+      <TextInput
+        style={[styles.input, usernameError && styles.inputError]}
+        placeholder="Username"
+        value={username}
+        onChangeText={setUsername}
+      />
+      <TextInput
+        style={[styles.input, emailError && styles.inputError]}
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
+        keyboardType="email-address"
+        autoCapitalize="none"
+      />
+      <TextInput
+        style={[styles.input, passwordError && styles.inputError]}
+        placeholder="Password"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry={!showPassword}
+      />
+      <TextInput
+        style={[styles.input, confirmPasswordError && styles.inputError]}
+        placeholder="Confirm Password"
+        value={confirmPassword}
+        onChangeText={setConfirmPassword}
+        secureTextEntry={!showPassword}
+      />
+      <View style={styles.switchContainer}>
+        <Text>Show Password</Text>
+        <Switch value={showPassword} onValueChange={setShowPassword} />
       </View>
-      <View style={styles.container}>
-        <Text style={styles.registerTitle}>Registrarse</Text>
-        <TextInput
-          style={[styles.input, usernameError && styles.errorInput]}
-          placeholder="Nombre de usuario"
-          onChangeText={(text) => {
-            setUsername(text);
-            setUsernameError(false);
-          }}
-          value={username}
-        />
-        {usernameError && <Text style={styles.errorMessage}>Por favor, introduce tu nombre de usuario</Text>}
-        <TextInput
-          style={[styles.input, emailError && styles.errorInput]}
-          placeholder="Correo electrónico"
-          onChangeText={(text) => {
-            setEmail(text);
-            setEmailError(false);
-          }}
-          value={email}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-        {emailError && <Text style={styles.errorMessage}>Por favor, introduce un correo electrónico válido</Text>}
-        <TextInput
-          style={[styles.input, passwordError && styles.errorInput]}
-          placeholder="Contraseña"
-          onChangeText={(text) => {
-            setPassword(text);
-            setPasswordError(false);
-          }}
-          value={password}
-          secureTextEntry={!showPassword}
-          autoCapitalize="none"
-        />
-        {passwordError && <Text style={styles.errorMessage}>Por favor, introduce tu contraseña</Text>}
-        <TextInput
-          style={[styles.input, confirmPasswordError && styles.errorInput]}
-          placeholder="Confirmar contraseña"
-          onChangeText={(text) => {
-            setConfirmPassword(text);
-            setConfirmPasswordError(false);
-          }}
-          value={confirmPassword}
-          secureTextEntry={!showPassword}
-          autoCapitalize="none"
-        />
-        {confirmPasswordError && <Text style={styles.errorMessage}>Por favor, confirma tu contraseña</Text>}
-        <View style={styles.checkboxContainer}>
-          <Text>Mostrar contraseña</Text>
-          <Switch
-            value={showPassword}
-            onValueChange={setShowPassword}
-            style={styles.checkbox}
-            trackColor={{ false: '#767577', true: '#007bff' }}
-            thumbColor={showPassword ? '#f4f3f4' : '#f4f3f4'}
-          />
-        </View>
-        <View style={styles.checkboxContainer}>
-          <Switch
-            value={termsAccepted}
-            onValueChange={setTermsAccepted}
-            style={styles.checkbox}
-            trackColor={{ false: '#767577', true: '#007bff' }}
-            thumbColor={termsAccepted ? '#f4f3f4' : '#f4f3f4'}
-          />
-          <Text style={{ marginLeft: 10 }}>Acepto los términos y condiciones</Text>
-        </View>
-        {termsError && <Text style={styles.errorMessage}>Debes aceptar los términos y condiciones</Text>}
-        <View style={styles.buttonContainer}>
-          <Button
-            title="Registrarse"
-            onPress={handleRegister}
-            color="#007bff"
-          />
-        </View>
+      <View style={styles.switchContainer}>
+        <Text>I accept the terms and conditions</Text>
+        <Switch value={termsAccepted} onValueChange={setTermsAccepted} />
       </View>
+      {termsError && <Text style={styles.errorText}>You must accept the terms and conditions</Text>}
+      <Button title="Register" onPress={handleRegister} />
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  scrollContainer: {
+  container: {
     flexGrow: 1,
+    justifyContent: 'center',
+    padding: 20,
     backgroundColor: '#fff',
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingTop: 10,
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-  },
-  input: {
-    width: '100%',
-    height: 40,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginBottom: 10,
-  },
-  errorInput: {
-    borderColor: 'red',
-  },
-  errorMessage: {
-    color: 'red',
-    marginBottom: 5,
-  },
-  checkboxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  checkbox: {
-    marginLeft: 'auto',
-  },
-  buttonContainer: {
-    width: '100%',
-    marginBottom: 10,
-  },
-  registerTitle: {
+  title: {
     fontSize: 24,
     fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 4,
+    padding: 10,
     marginBottom: 10,
-    color: '#007bff',
+  },
+  inputError: {
+    borderColor: 'red',
+  },
+  switchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+    justifyContent: 'space-between',
+  },
+  errorText: {
+    color: 'red',
+    marginBottom: 10,
+    textAlign: 'center',
   },
 });
 

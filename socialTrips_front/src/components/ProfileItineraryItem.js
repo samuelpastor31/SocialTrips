@@ -19,9 +19,9 @@ const ProfileItineraryItem = ({ itinerary, onDelete }) => {
       </View>
       <Text style={styles.description}>{itinerary.descripcion}</Text>
       <Text style={styles.destination}>
-        Destino: {country ? `${itinerary.destino} ${country.flag}` : itinerary.destino}
+        Destination: {country ? `${itinerary.destino} ${country.flag}` : itinerary.destino}
       </Text>
-      <Text style={styles.duration}>Duración: {itinerary.duracion} días</Text>
+      <Text style={styles.duration}>Duration: {itinerary.duracion} days</Text>
     </View>
   );
 };

@@ -6,29 +6,29 @@ import { getApiUrl } from '../utils/api';
 import { useNavigation } from '@react-navigation/native';
 
 const EditProfile = ({ user, setEditing, fetchUserData }) => {
-  const [nombreUsuario, setNombreUsuario] = useState(user.nombreUsuario);
-  const [correoElectronico, setCorreoElectronico] = useState(user.correoElectronico);
-  const [contrasenaActual, setContrasenaActual] = useState('');
-  const [contrasenaNueva, setContrasenaNueva] = useState('');
-  const [contrasenaConfirmar, setContrasenaConfirmar] = useState('');
+  const [username, setUsername] = useState(user.nombreUsuario);
+  const [email, setEmail] = useState(user.correoElectronico);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const navigation = useNavigation();
 
-  const handleGuardarCambios = async () => {
-    if (!nombreUsuario || !correoElectronico || !contrasenaActual || !contrasenaNueva || !contrasenaConfirmar) {
-      Alert.alert('Error', 'Todos los campos son obligatorios.');
+  const handleSaveChanges = async () => {
+    if (!username || !email || !currentPassword || !newPassword || !confirmPassword) {
+      Alert.alert('Error', 'All fields are required.');
       return;
     }
 
-    if (contrasenaNueva !== contrasenaConfirmar) {
-      Alert.alert('Error', 'Las nuevas contraseñas no coinciden.');
+    if (newPassword !== confirmPassword) {
+      Alert.alert('Error', 'The new passwords do not match.');
       return;
     }
 
     const userData = {
-      nombreUsuario,
-      correoElectronico,
-      contrasenaActual,
-      contrasenaNueva,
+      nombreUsuario: username,
+      correoElectronico: email,
+      contrasenaActual: currentPassword,
+      contrasenaNueva: newPassword,
     };
 
     try {
@@ -37,58 +37,58 @@ const EditProfile = ({ user, setEditing, fetchUserData }) => {
           'Content-Type': 'application/json',
         },
       });
-      Alert.alert('Cambios guardados', 'Tu perfil ha sido actualizado correctamente.');
+      Alert.alert('Changes saved', 'Your profile has been updated successfully.');
       setEditing(false);
       fetchUserData();
       navigation.navigate('MainScreen');
     } catch (error) {
       console.error('Error:', error);
-      Alert.alert('Error', error.response?.data?.message || 'Hubo un problema al guardar los cambios. Por favor, inténtalo de nuevo.');
+      Alert.alert('Error', error.response?.data?.message || 'There was a problem saving the changes. Please try again.');
     }
   };
 
   return (
     <View>
       <TextInput
-        value={nombreUsuario}
-        onChangeText={setNombreUsuario}
-        placeholder="Nombre de usuario"
+        value={username}
+        onChangeText={setUsername}
+        placeholder="Username"
         style={styles.textInput}
       />
       <TextInput
-        value={correoElectronico}
-        onChangeText={setCorreoElectronico}
-        placeholder="Correo electrónico"
+        value={email}
+        onChangeText={setEmail}
+        placeholder="Email"
         style={styles.textInput}
       />
       <TextInput
-        value={contrasenaActual}
-        onChangeText={setContrasenaActual}
-        placeholder="Contraseña actual"
+        value={currentPassword}
+        onChangeText={setCurrentPassword}
+        placeholder="Current password"
         secureTextEntry={true}
         style={styles.textInput}
       />
       <TextInput
-        value={contrasenaNueva}
-        onChangeText={setContrasenaNueva}
-        placeholder="Nueva contraseña"
+        value={newPassword}
+        onChangeText={setNewPassword}
+        placeholder="New password"
         secureTextEntry={true}
         style={styles.textInput}
       />
       <TextInput
-        value={contrasenaConfirmar}
-        onChangeText={setContrasenaConfirmar}
-        placeholder="Confirmar nueva contraseña"
+        value={confirmPassword}
+        onChangeText={setConfirmPassword}
+        placeholder="Confirm new password"
         secureTextEntry={true}
         style={styles.textInput}
       />
       <Button
         icon="check"
         mode="contained"
-        onPress={handleGuardarCambios}
+        onPress={handleSaveChanges}
         style={styles.button}
       >
-        Guardar cambios
+        Save changes
       </Button>
     </View>
   );

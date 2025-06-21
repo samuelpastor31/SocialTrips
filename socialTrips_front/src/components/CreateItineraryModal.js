@@ -7,10 +7,10 @@ import { UserContext } from '../components/UserContext';
 
 const CreateItineraryModal = ({ visible, onClose }) => {
   const { username } = useContext(UserContext);
-  const [titulo, setTitulo] = useState('');
-  const [descripcion, setDescripcion] = useState('');
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const [selectedCountry, setSelectedCountry] = useState('');
-  const [duracion, setDuracion] = useState('');
+  const [duration, setDuration] = useState('');
 
   const getUserId = async (username) => {
     try {
@@ -18,18 +18,18 @@ const CreateItineraryModal = ({ visible, onClose }) => {
       if (response.status === 200) {
         return response.data.id;
       } else {
-        throw new Error('Usuario no encontrado');
+        throw new Error('User not found');
       }
     } catch (error) {
-      console.error('Error obteniendo el ID del usuario:', error);
-      Alert.alert('Error', 'Hubo un problema al obtener el ID del usuario.');
+      console.error('Error getting user ID:', error);
+      Alert.alert('Error', 'There was a problem getting the user ID.');
       return null;
     }
   };
 
-  const handleCrearItinerario = async () => {
-    if (!titulo || !descripcion || !selectedCountry || !duracion) {
-      Alert.alert('Error', 'Por favor, completa todos los campos.');
+  const handleCreateItinerary = async () => {
+    if (!title || !description || !selectedCountry || !duration) {
+      Alert.alert('Error', 'Please fill in all fields.');
       return;
     }
 
@@ -38,23 +38,23 @@ const CreateItineraryModal = ({ visible, onClose }) => {
       return;
     }
 
-    const itinerarioData = {
+    const itineraryData = {
       idUsuario: userId,
-      titulo,
-      descripcion,
+      titulo: title,
+      descripcion: description,
       destino: selectedCountry,
-      duracion: parseInt(duracion, 10),
+      duracion: parseInt(duration, 10),
     };
 
     try {
-      const response = await axios.post(getApiUrl('itinerarios/create'), itinerarioData);
+      const response = await axios.post(getApiUrl('itinerarios/create'), itineraryData);
       if (response.status === 200) {
-        Alert.alert('Éxito', 'Itinerario creado correctamente.');
+        Alert.alert('Success', 'Itinerary created successfully.');
         onClose();
       }
     } catch (error) {
-      console.error('Error creando el itinerario:', error);
-      Alert.alert('Error', 'Hubo un problema al crear el itinerario.');
+      console.error('Error creating itinerary:', error);
+      Alert.alert('Error', 'There was a problem creating the itinerary.');
     }
   };
 
@@ -62,32 +62,32 @@ const CreateItineraryModal = ({ visible, onClose }) => {
     <Modal transparent={true} visible={visible} animationType="slide">
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
-          <Text style={styles.title}>Crear Itinerario</Text>
+          <Text style={styles.title}>Create Itinerary</Text>
           <CountryComboBox selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry} />
           <TextInput
             style={styles.input}
-            placeholder="Título"
-            value={titulo}
-            onChangeText={setTitulo}
+            placeholder="Title"
+            value={title}
+            onChangeText={setTitle}
           />
           <TextInput
             style={[styles.input, { height: 100 }]}
-            placeholder="Descripción"
+            placeholder="Description"
             multiline={true}
             numberOfLines={4}
-            value={descripcion}
-            onChangeText={setDescripcion}
+            value={description}
+            onChangeText={setDescription}
           />
           <TextInput
             style={styles.input}
-            placeholder="Duración (en días)"
+            placeholder="Duration (in days)"
             keyboardType="numeric"
-            value={duracion}
-            onChangeText={setDuracion}
+            value={duration}
+            onChangeText={setDuration}
           />
-          <Button title="Crear Itinerario" onPress={handleCrearItinerario} />
+          <Button title="Create Itinerary" onPress={handleCreateItinerary} />
           <TouchableOpacity onPress={onClose}>
-            <Text style={styles.cancelButton}>Cancelar</Text>
+            <Text style={styles.cancelButton}>Cancel</Text>
           </TouchableOpacity>
         </View>
       </View>

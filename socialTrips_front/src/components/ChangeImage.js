@@ -19,7 +19,7 @@ const ChangeImage = ({ pfp, setPfp }) => {
     };
 
     const handleRemoveProfileImage = () => {
-        setPfp(''); // Restablece a la imagen predeterminada
+        setPfp(''); // Reset to default image
     };
 
     return (

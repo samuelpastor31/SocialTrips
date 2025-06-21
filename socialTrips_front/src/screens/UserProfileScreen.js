@@ -20,7 +20,7 @@ const UserProfileScreen = ({ route, navigation }) => {
         setItineraries(itinerariesResponse.data);
       } catch (error) {
         console.error('Error fetching user data:', error);
-        Alert.alert('Error', 'Hubo un problema al cargar los datos del usuario.');
+        Alert.alert('Error', 'There was a problem loading user data.');
       }
     };
 
@@ -38,8 +38,8 @@ const UserProfileScreen = ({ route, navigation }) => {
           />
           <Text style={styles.title}>{user.nombreUsuario}</Text>
           <Text style={styles.email}>{user.correoElectronico}</Text>
-          <Text style={styles.date}>Registrado desde: {new Date(user.fechaRegistro).toLocaleDateString()}</Text>
-          <Text style={styles.header}>Itinerarios creados por {user.nombreUsuario}</Text>
+          <Text style={styles.date}>Registered since: {new Date(user.fechaRegistro).toLocaleDateString()}</Text>
+          <Text style={styles.header}>Itineraries created by {user.nombreUsuario}</Text>
           <FlatList
             data={itineraries}
             renderItem={({ item }) => <ItineraryItemNoLike itinerary={item} />}
@@ -48,7 +48,7 @@ const UserProfileScreen = ({ route, navigation }) => {
           />
         </View>
       ) : (
-        <Text style={styles.loading}>Cargando...</Text>
+        <Text style={styles.loading}>Loading...</Text>
       )}
     </View>
   );
@@ -58,43 +58,47 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8f9fa',
-    padding: 20,
   },
   profileContainer: {
+    flex: 1,
     alignItems: 'center',
+    padding: 20,
   },
   profileImage: {
     width: 100,
     height: 100,
     borderRadius: 50,
-    marginBottom: 10,
+    marginBottom: 16,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 8,
   },
   email: {
     fontSize: 16,
-    marginBottom: 10,
+    marginBottom: 8,
   },
   date: {
     fontSize: 14,
     color: '#666',
-    marginBottom: 20,
+    marginBottom: 8,
   },
   header: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
-    marginVertical: 10,
+    marginTop: 16,
+    marginBottom: 8,
   },
   list: {
-    paddingBottom: 70,
+    width: '100%',
+    paddingBottom: 16,
   },
   loading: {
     fontSize: 16,
+    color: '#666',
     textAlign: 'center',
-    marginTop: 20,
+    marginTop: 40,
   },
 });
 

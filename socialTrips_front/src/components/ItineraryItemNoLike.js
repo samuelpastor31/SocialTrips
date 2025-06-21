@@ -16,7 +16,7 @@ const ItineraryItemNoLike = ({ itinerary }) => {
         setUserName(response.data.nombreUsuario);
       } catch (error) {
         console.error('Error fetching user data:', error);
-        Alert.alert('Error', 'Hubo un problema al obtener el nombre del usuario.');
+        Alert.alert('Error', 'There was a problem fetching the user name.');
       }
     };
 
@@ -34,11 +34,11 @@ const ItineraryItemNoLike = ({ itinerary }) => {
       <Text style={styles.title}>{itinerary.titulo}</Text>
       <Text style={styles.description}>{itinerary.descripcion}</Text>
       <Text style={styles.destination}>
-        Destino: {country ? ` ${itinerary.destino} ${country.flag}` : itinerary.destino}
+        Destination: {country ? ` ${itinerary.destino} ${country.flag}` : itinerary.destino}
       </Text>
-      <Text style={styles.duration}>Duración: {itinerary.duracion} días</Text>
+      <Text style={styles.duration}>Duration: {itinerary.duracion} days</Text>
       <TouchableOpacity onPress={handlePress}>
-        <Text style={styles.user}>Creado por: {userName}</Text>
+        <Text style={styles.user}>Created by: {userName}</Text>
       </TouchableOpacity>
     </View>
   );

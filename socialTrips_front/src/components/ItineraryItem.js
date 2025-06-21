@@ -29,7 +29,7 @@ const ItineraryItem = ({ itinerary, onLikeToggle }) => {
         setUserProfileImage(response.data.fotoPerfil);
       } catch (error) {
         console.error('Error fetching user data:', error);
-        Alert.alert('Error', 'Hubo un problema al obtener los datos del usuario.');
+        Alert.alert('Error', 'There was a problem fetching user data.');
       }
     };
 
@@ -43,7 +43,7 @@ const ItineraryItem = ({ itinerary, onLikeToggle }) => {
         setUserId(response.data.id);
       } catch (error) {
         console.error('Error fetching user ID:', error);
-        Alert.alert('Error', 'Hubo un problema al obtener el ID del usuario.');
+        Alert.alert('Error', 'There was a problem fetching the user ID.');
       }
     };
 
@@ -58,7 +58,7 @@ const ItineraryItem = ({ itinerary, onLikeToggle }) => {
         setCommentsCount(response.data.length);
       } catch (error) {
         console.error('Error fetching comments:', error);
-        Alert.alert('Error', 'Hubo un problema al obtener los comentarios.');
+        Alert.alert('Error', 'There was a problem fetching comments.');
       }
     };
 
@@ -72,7 +72,7 @@ const ItineraryItem = ({ itinerary, onLikeToggle }) => {
       setCommentsCount(response.data.length);
     } catch (error) {
       console.error('Error fetching comments:', error);
-      Alert.alert('Error', 'Hubo un problema al obtener los comentarios.');
+      Alert.alert('Error', 'There was a problem fetching comments.');
     }
   };
 
@@ -87,7 +87,7 @@ const ItineraryItem = ({ itinerary, onLikeToggle }) => {
 
   const handleAddComment = async () => {
     if (comment.trim() === '') {
-      Alert.alert('Error', 'El comentario no puede estar vacío.');
+      Alert.alert('Error', 'Comment cannot be empty.');
       return;
     }
 
@@ -99,14 +99,14 @@ const ItineraryItem = ({ itinerary, onLikeToggle }) => {
         fechaComentario: new Date().toISOString()
       });
       if (response.status === 201) {
-        Alert.alert('Comentario agregado', 'Tu comentario ha sido agregado correctamente.');
+        Alert.alert('Comment added', 'Your comment has been added successfully.');
         setComment('');
         setCommentModalVisible(false);
-        fetchComments(); // Actualizar comentarios y conteo después de agregar un nuevo comentario
+        fetchComments(); // Update comments and count after adding a new comment
       }
     } catch (error) {
       console.error('Error adding comment:', error);
-      Alert.alert('Error', 'Hubo un problema al agregar el comentario.');
+      Alert.alert('Error', 'There was a problem adding the comment.');
     }
   };
 
@@ -122,14 +122,14 @@ const ItineraryItem = ({ itinerary, onLikeToggle }) => {
           />
           <Text style={styles.userName}>{userName}</Text>
         </TouchableOpacity>
-        <Text style={styles.timeAgo}>Hace 2 horas</Text>
+        <Text style={styles.timeAgo}>2 hours ago</Text>
       </View>
       <Text style={styles.title}>{itinerary.titulo}</Text>
       <Text style={styles.description}>{itinerary.descripcion}</Text>
       <Text style={styles.destination}>
         {itinerary.destino} {country ? country.flag : ''}
       </Text>
-      <Text style={styles.duration}>Duración: {itinerary.duracion} días</Text>
+      <Text style={styles.duration}>Duration: {itinerary.duracion} days</Text>
       <View style={styles.footer}>
         <View style={styles.actionContainer}>
           <LikeButton itinerary={itinerary} onLikeToggle={handleLikeToggle} />
@@ -137,7 +137,7 @@ const ItineraryItem = ({ itinerary, onLikeToggle }) => {
         </View>
         <TouchableOpacity style={styles.actionContainer} onPress={() => setCommentModalVisible(true)}>
           <Ionicons name="chatbubble-outline" size={24} color="#666" />
-          <Text style={styles.actionText}>Comentar</Text>
+          <Text style={styles.actionText}>Comment</Text>
         </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.showCommentsButton} onPress={() => {
@@ -145,7 +145,7 @@ const ItineraryItem = ({ itinerary, onLikeToggle }) => {
         if (!commentsVisible) fetchComments();
       }}>
         <Text style={styles.showCommentsText}>
-          {commentsVisible ? 'Ocultar comentarios' : `Mostrar comentarios (${commentsCount})`}
+          {commentsVisible ? 'Hide comments' : `Show comments (${commentsCount})`}
         </Text>
       </TouchableOpacity>
       {commentsVisible && (
@@ -172,16 +172,16 @@ const ItineraryItem = ({ itinerary, onLikeToggle }) => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Agregar comentario</Text>
+            <Text style={styles.modalTitle}>Add comment</Text>
             <TextInput
               style={styles.commentInput}
-              placeholder="Escribe tu comentario aquí"
+              placeholder="Write your comment here"
               value={comment}
               onChangeText={setComment}
             />
             <View style={styles.modalButtons}>
-              <Button title="Enviar" onPress={handleAddComment} />
-              <Button title="Cancelar" onPress={() => setCommentModalVisible(false)} />
+              <Button title="Send" onPress={handleAddComment} />
+              <Button title="Cancel" onPress={() => setCommentModalVisible(false)} />
             </View>
           </View>
         </View>
